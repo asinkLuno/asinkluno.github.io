@@ -60,7 +60,7 @@ export function ProjectCard({ project, meta }: Props) {
       {project.note && <p className="note">{project.note}</p>}
 
       <div className="card-meta">
-        <span>{meta?.language ?? project.lang}</span>
+        <span>{project.lang}</span>
         <span className="dot">·</span>
         <span className={isNew ? 'fresh' : undefined}>更新于 {relativeDate(updated)}</span>
         {project.demo && (

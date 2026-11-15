@@ -4,6 +4,8 @@ import { site, projects } from './content';
 import { useRepoMeta } from './lib/github';
 import './styles.css';
 
+const YEAR = new Date().getFullYear();
+
 const count = (status: string) => projects.filter((p) => p.status === status).length;
 const doneTasks = projects.reduce((n, p) => n + p.tasks.filter((t) => t.done).length, 0);
 const allTasks = projects.reduce((n, p) => n + p.tasks.length, 0);
@@ -58,7 +60,7 @@ export default function App() {
           “更新于”优先取 GitHub 上的真实提交时间，拉不到就退回手写日期。
         </p>
         <p className="colophon">
-          React + Vite，托管在 GitHub Pages · 无统计、无广告 · © {new Date().getFullYear()}{' '}
+          React + Vite，托管在 GitHub Pages · 无统计、无广告 · © {YEAR}{' '}
           {site.name}
         </p>
       </footer>
