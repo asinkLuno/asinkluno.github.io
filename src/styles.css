@@ -112,7 +112,7 @@ code {
 
 .site-head {
   border-bottom: 1px solid var(--rule);
-  padding-bottom: 1.4rem;
+  padding-bottom: 1.1rem;
 }
 
 .head-row {
@@ -163,13 +163,6 @@ h1 {
 
 .theme-toggle:hover {
   color: var(--accent);
-}
-
-.tagline {
-  max-width: 38rem;
-  margin: 0.7rem 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
 }
 
 /* ---------- 看板 ---------- */
@@ -235,13 +228,6 @@ h1 {
   color: var(--muted);
   letter-spacing: 0;
   vertical-align: super;
-}
-
-.column-head p {
-  margin: 0.35rem 0 0;
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: var(--muted);
 }
 
 .empty {
@@ -392,16 +378,6 @@ h1 {
 
 .tasks li[data-done="false"] .mark {
   color: var(--accent);
-}
-
-.note {
-  margin: 0.9rem 0 0;
-  padding-left: 0.7rem;
-  border-left: 2px solid var(--rule);
-  font-size: 0.83rem;
-  line-height: 1.75;
-  color: var(--muted);
-  text-wrap: pretty;
 }
 
 .card-meta {

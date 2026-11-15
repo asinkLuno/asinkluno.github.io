@@ -57,7 +57,6 @@ export function ProjectCard({ project, meta }: Props) {
         ))}
       </ul>
 
-      {project.note && <p className="note">{project.note}</p>}
 
       <div className="card-meta">
         <span>{project.lang}</span>

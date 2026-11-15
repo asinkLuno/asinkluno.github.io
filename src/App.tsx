@@ -24,19 +24,18 @@ export default function App() {
             <ThemeToggle />
           </nav>
         </div>
-        <p className="tagline">{site.tagline}</p>
       </header>
 
       <main>
         <p className="stats">
           <span>
-            <b>{count('building')}</b> 在写
+            <b>{count('building')}</b> 进行中
           </span>
           <span>
             <b>{count('released')}</b> 已发布
           </span>
           <span>
-            <b>{count('planned')}</b> 搁着
+            <b>{count('planned')}</b> 计划中
           </span>
           <span>
             <b>
@@ -50,13 +49,8 @@ export default function App() {
       </main>
 
       <footer className="site-foot">
-        <p>
-          板子是静态的：状态写在 <code>src/content.ts</code> 里，push 一次就更新。
-          “更新于”优先取 GitHub 上的真实提交时间，拉不到就退回手写日期。
-        </p>
         <p className="colophon">
-          React + Vite，托管在 GitHub Pages · 无统计、无广告 · © {YEAR}{' '}
-          {site.name}
+          React + Vite · GitHub Pages · © {YEAR} {site.name}
         </p>
       </footer>
     </div>

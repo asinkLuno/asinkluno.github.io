@@ -16,7 +16,6 @@ export function Board({ meta }: Props) {
                 {col.title}
                 <sup>{items.length}</sup>
               </h2>
-              <p>{col.hint}</p>
             </header>
 
             {items.length === 0 ? (
