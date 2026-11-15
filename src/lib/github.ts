@@ -1,100 +1,55 @@
 import { useEffect, useState } from 'react';
 
 export type RepoMeta = {
-  pushedAt?: string;
-  language?: string;
-  stars?: number;
-  homepage?: string;
+  /** 最近一次 push（ISO） */
+  pushedAt?: string | null;
+  /** GitHub 自己算的主语言 */
+  language?: string | null;
+  /** 最新 release 的 tag，没有 release 就退到最新 tag */
+  version?: string | null;
 };
 
-type Cache = Record<string, { at: number; meta: RepoMeta }>;
+const CACHE_KEY = 'repo-meta:v1';
+const TTL = 30 * 60 * 1000;
 
-const CACHE_KEY = 'gh-meta:v1';
-const TTL = 1000 * 60 * 30;
-
-function readCache(): Cache {
+function readCache(): Record<string, RepoMeta> {
   try {
-    return JSON.parse(sessionStorage.getItem(CACHE_KEY) ?? '{}') as Cache;
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return {};
+    const cache = JSON.parse(raw) as { at: number; data: Record<string, RepoMeta> };
+    return Date.now() - cache.at > TTL ? {} : cache.data;
   } catch {
     return {};
   }
 }
 
-function writeCache(cache: Cache) {
-  try {
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-  } catch {
-    /* 隐身模式下会失败，无所谓 */
-  }
-}
-
 /**
- * 从 GitHub 拉每个仓库的最近提交时间 / 语言 / star。
- * 拉不到就用 content.ts 里手写的数据，看板不会因此空掉。
+ * 版本号与更新时间来自构建时生成的 repo-meta.json（见 scripts/fetch-meta.mjs）。
+ * 拿不到就用 content.ts 里手写的数据兜底。
  */
-export function useRepoMeta(owner: string, repos: string[]) {
-  const [meta, setMeta] = useState<Record<string, RepoMeta>>(() => {
-    const cache = readCache();
-    const out: Record<string, RepoMeta> = {};
-    const now = Date.now();
-    for (const id of repos) {
-      const hit = cache[id];
-      if (hit && now - hit.at < TTL) out[id] = hit.meta;
-    }
-    return out;
-  });
+export function useRepoMeta() {
+  const [meta, setMeta] = useState<Record<string, RepoMeta>>(readCache);
 
   useEffect(() => {
-    const cache = readCache();
-    const now = Date.now();
-    const stale = repos.filter((id) => {
-      const hit = cache[id];
-      return !hit || now - hit.at >= TTL;
-    });
-    if (stale.length === 0) return;
+    const cached = readCache();
+    if (Object.keys(cached).length > 0) return;
 
-    const controller = new AbortController();
     let alive = true;
-
-    Promise.all(
-      stale.map(async (id) => {
-        const res = await fetch(`https://api.github.com/repos/${owner}/${id}`, {
-          signal: controller.signal,
-          headers: { Accept: 'application/vnd.github+json' },
-        });
-        if (!res.ok) throw new Error(`${id}: ${res.status}`);
-        const json = (await res.json()) as {
-          pushed_at?: string;
-          language?: string | null;
-          stargazers_count?: number;
-          homepage?: string | null;
-        };
-        const meta: RepoMeta = {
-          pushedAt: json.pushed_at?.slice(0, 10),
-          language: json.language ?? undefined,
-          stars: json.stargazers_count,
-          homepage: json.homepage || undefined,
-        };
-        cache[id] = { at: now, meta };
-        return [id, meta] as const;
-      }),
-    )
-      .then((entries) => {
-        if (!alive) return;
-        writeCache(cache);
-        setMeta((prev) => ({ ...prev, ...Object.fromEntries(entries) }));
+    fetch(`${import.meta.env.BASE_URL}repo-meta.json`, { cache: 'no-cache' })
+      .then((res) => (res.ok ? (res.json() as Promise<Record<string, RepoMeta>>) : {}))
+      .then((data) => {
+        if (!alive || Object.keys(data).length === 0) return;
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), data }));
+        setMeta(data);
       })
       .catch(() => {
-        /* 限流、离线，都退回到本地数据 */
+        /* 本地没跑脚本就静默用兜底数据 */
       });
 
     return () => {
       alive = false;
-      controller.abort();
     };
-    // repos 来自静态常量，只需跑一次
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [owner]);
+  }, []);
 
   return meta;
 }

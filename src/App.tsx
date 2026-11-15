@@ -1,63 +1,42 @@
 import { Board } from './components/Board';
-import { ThemeToggle } from './components/ThemeToggle';
-import { site, projects } from './content';
+import { projects, site } from './content';
 import { useRepoMeta } from './lib/github';
 
 const YEAR = new Date().getFullYear();
-
 const count = (status: string) => projects.filter((p) => p.status === status).length;
-const doneTasks = projects.reduce((n, p) => n + p.tasks.filter((t) => t.done).length, 0);
-const allTasks = projects.reduce((n, p) => n + p.tasks.length, 0);
-
-const navLink = 'text-muted no-underline hover:text-accent';
 
 export default function App() {
-  const meta = useRepoMeta('asinkLuno', projects.map((p) => p.id));
+  const meta = useRepoMeta();
 
   return (
-    <div className="mx-auto max-w-[76rem] px-6 py-8 md:px-10 md:py-12 lg:px-12">
-      <header className="border-b border-rule pb-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-          <h1 className="text-[1.45rem] leading-tight font-medium">{site.name}</h1>
-          <nav className="flex items-baseline gap-5 font-mono text-[0.75rem] tracking-[0.02em]">
-            <a className={navLink} href={site.blog}>
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+      <div className="mx-auto max-w-5xl px-6 py-10">
+        <header className="flex flex-wrap items-baseline justify-between gap-4 border-b border-gray-200 pb-4 dark:border-gray-800">
+          <h1 className="text-2xl font-semibold tracking-tight">{site.name}</h1>
+          <nav className="flex gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <a className="hover:text-gray-900 dark:hover:text-gray-100" href={site.blog}>
               博客
             </a>
-            <a className={navLink} href={site.github}>
+            <a className="hover:text-gray-900 dark:hover:text-gray-100" href={site.github}>
               GitHub
             </a>
-            <ThemeToggle />
           </nav>
-        </div>
-      </header>
+        </header>
 
-      <main>
-        <p className="my-6 flex flex-wrap gap-x-6 gap-y-1 border-y border-rule py-3 font-mono text-[0.72rem] tracking-[0.01em] text-muted">
-          <span>
-            <b className="font-normal text-ink tabular-nums">{count('building')}</b> 进行中
-          </span>
-          <span>
-            <b className="font-normal text-ink tabular-nums">{count('released')}</b> 已发布
-          </span>
-          <span>
-            <b className="font-normal text-ink tabular-nums">{count('planned')}</b> 计划中
-          </span>
-          <span>
-            <b className="font-normal text-ink tabular-nums">
-              {doneTasks}/{allTasks}
-            </b>{' '}
-            项任务
-          </span>
-        </p>
+        <main className="py-8">
+          <p className="mb-6 flex flex-wrap gap-x-4 text-sm text-gray-500 dark:text-gray-400">
+            <span>{count('building')} 个进行中</span>
+            <span>{count('released')} 个已发布</span>
+            <span>{count('planned')} 个计划中</span>
+          </p>
 
-        <Board meta={meta} />
-      </main>
+          <Board meta={meta} />
+        </main>
 
-      <footer className="mt-14 border-t border-rule pt-4">
-        <p className="font-mono text-[0.7rem] tracking-[0.02em] text-muted">
-          React + Vite · GitHub Pages · © {YEAR} {site.name}
-        </p>
-      </footer>
+        <footer className="border-t border-gray-200 pt-4 text-xs text-gray-400 dark:border-gray-800 dark:text-gray-500">
+          © {YEAR} {site.name}
+        </footer>
+      </div>
     </div>
   );
 }

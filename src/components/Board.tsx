@@ -6,26 +6,22 @@ type Props = { meta: Record<string, RepoMeta> };
 
 export function Board({ meta }: Props) {
   return (
-    <div className="grid grid-cols-1 border-t border-rule md:grid-cols-3 md:divide-x md:divide-rule">
+    <div className="grid gap-6 md:grid-cols-3">
       {columns.map((col) => {
         const items = projects.filter((p) => p.status === col.status);
         return (
-          <section
-            key={col.status}
-            aria-label={col.title}
-            className="border-b border-rule last:border-b-0 md:border-b-0 md:px-6 md:first:pl-0 md:last:pr-0"
-          >
-            <header className="border-b border-rule pt-5 pb-4">
-              <h2 className="font-sans text-[0.8rem] font-semibold tracking-[0.18em]">
-                {col.title}
-                <sup className="ml-2 align-super font-mono text-[0.6rem] font-normal tracking-normal text-muted">
-                  {items.length}
-                </sup>
-              </h2>
-            </header>
+          <section key={col.status} className="flex flex-col gap-3">
+            <h2 className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
+              {col.title}
+              <span className="ml-2 font-normal text-gray-400 dark:text-gray-500">
+                {items.length}
+              </span>
+            </h2>
 
             {items.length === 0 ? (
-              <p className="py-5 text-[0.85rem] text-muted">空着。</p>
+              <p className="rounded-lg border border-dashed border-gray-200 p-4 text-sm text-gray-400 dark:border-gray-800 dark:text-gray-600">
+                暂无
+              </p>
             ) : (
               items.map((project) => (
                 <ProjectCard key={project.id} project={project} meta={meta[project.id]} />
