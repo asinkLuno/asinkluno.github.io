@@ -44,22 +44,3 @@ export function activityAt(meta: RepoMeta | undefined, now = Date.now()): number
   const released = meta?.releasedAt ? Date.parse(meta.releasedAt) : Number.NaN;
   return Number.isNaN(released) ? now : released;
 }
-
-/** GitHub 的语言色点 */
-const LANGUAGE_COLOR: Record<string, string> = {
-  TypeScript: '#3178c6',
-  JavaScript: '#f1e05a',
-  Python: '#3572a5',
-  Rust: '#dea584',
-  Go: '#00add8',
-  'C++': '#f34b7d',
-  C: '#555555',
-  Shell: '#89e051',
-  HTML: '#e34c26',
-  CSS: '#563d7c',
-  Lua: '#000080',
-};
-
-export function languageColor(language: string | null | undefined): string {
-  return (language && LANGUAGE_COLOR[language]) || '#9ca3af';
-}

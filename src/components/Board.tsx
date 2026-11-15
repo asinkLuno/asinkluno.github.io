@@ -27,19 +27,16 @@ export function Board() {
   })).filter((col) => col.items.length > 0);
 
   return (
-    <div className={`grid gap-6 ${GRID[filled.length] ?? 'md:grid-cols-3'}`}>
+    <div className={`grid gap-10 ${GRID[filled.length] ?? 'md:grid-cols-3'}`}>
       {filled.map((col) => (
-        <section key={col.status} className="flex flex-col gap-3">
-          <h2 className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-            {col.title}
-            <span className="ml-2 font-normal text-gray-400 dark:text-gray-500">
-              {col.items.length}
-            </span>
-          </h2>
+        <section key={col.status}>
+          <h2 className="border-b border-gray-200 pb-2 text-lg font-semibold">{col.title}</h2>
 
-          {col.items.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+          <div className="mt-4 space-y-8">
+            {col.items.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
         </section>
       ))}
     </div>
