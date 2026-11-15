@@ -1,8 +1,12 @@
 import { Board } from './components/Board';
 import { projects, site } from './content';
+import { repoMeta, statusOf } from './lib/meta';
+import type { Status } from './lib/meta';
 
 const YEAR = new Date().getFullYear();
-const count = (status: string) => projects.filter((p) => p.status === status).length;
+const NOW = Date.now();
+const count = (status: Status) =>
+  projects.filter((p) => statusOf(repoMeta[p.id], NOW) === status).length;
 
 export default function App() {
   return (

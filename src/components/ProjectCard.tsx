@@ -1,6 +1,6 @@
 import type { Project } from '../content';
 import { repoUrl } from '../content';
-import { repoMeta } from '../lib/meta';
+import { languageColor, repoMeta } from '../lib/meta';
 import { relativeDate } from '../lib/format';
 
 type Props = { project: Project };
@@ -12,8 +12,9 @@ export function ProjectCard({ project }: Props) {
   const meta = repoMeta[project.id];
   const description = meta?.description?.trim();
   const homepage = meta?.homepage?.trim();
-  const version = meta?.version ?? project.version;
-  const updated = meta?.pushedAt ?? project.updated;
+  const language = meta?.language ?? null;
+  const version = meta?.version?.trim();
+  const updated = meta?.pushedAt ?? meta?.releasedAt;
 
   return (
     <article className="flex flex-col rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700">
@@ -52,9 +53,20 @@ export function ProjectCard({ project }: Props) {
       </div>
 
       <p className="mt-3 flex flex-wrap items-center gap-x-1.5 border-t border-gray-100 pt-2.5 text-xs text-gray-500 dark:border-gray-800 dark:text-gray-500">
-        <span>{project.lang}</span>
-        <span aria-hidden="true">·</span>
-        <span>更新于 {relativeDate(updated)}</span>
+        {language && (
+          <>
+            <span className="inline-flex items-center gap-1.5">
+              <i
+                aria-hidden="true"
+                className="size-2 rounded-full"
+                style={{ backgroundColor: languageColor(language) }}
+              />
+              {language}
+            </span>
+            <span aria-hidden="true">·</span>
+          </>
+        )}
+        {updated && <span>更新于 {relativeDate(updated)}</span>}
       </p>
     </article>
   );

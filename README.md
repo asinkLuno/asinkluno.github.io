@@ -15,20 +15,30 @@ npm run preview  # 预览构建结果
 
 ## 内容从哪来
 
-`src/content.ts` 只手写三件 GitHub 不知道的事：
+`src/content.ts` 只剩下"展示哪些仓库、叫什么"：
 
-- `projects`：仓库名（`id`，同时用来拼仓库地址）、显示名、状态（`released` / `building` / `planned`）、语言标签、兜底用的 `updated` 与 `version`。
-- `columns`：三列的标题与顺序（计划中 / 进行中 / 已发布）。
+- `projects`：仓库名（`id`，同时用来拼仓库地址）与显示名。
 - `site`：站名、博客地址、GitHub 地址。
 
-卡片上的**简介、网站链接、版本号、更新时间**都来自 GitHub 仓库本身：
+卡片上的一切都来自 GitHub 仓库本身：
 
 - 简介 = 仓库的 `description`
 - 网站 = 仓库的 `homepage`（没填就不显示）
+- 语言 = `language`（带 GitHub 的语言色点）
 - 版本号 = 最新 release 的 tag，没有 release 就退到最新 tag
 - 更新时间 = `pushed_at`
 
 想改卡片上的一句话，去改那个仓库的 About，不用动代码。
+
+## 状态是算出来的
+
+三列不由手填，`statusOf()` 按 GitHub 数据推：
+
+- 发过 release → **已发布**
+- 没发过 release，但最近 30 天有提交 → **进行中**
+- 都没满足 → **计划中**
+
+阈值在 `src/lib/meta.ts` 的 `STALE_DAYS`。列内按最近活动时间倒序。
 
 ## 版本号是构建时抓的
 
