@@ -1,7 +1,8 @@
-// 构建前抓一次 GitHub 元信息，产出 public/repo-meta.json。
-// 这样页面本身是纯静态的：运行时不再调 api.github.com，也就不吃 60 次/小时的匿名限流。
+// 构建前抓一次 GitHub 元信息，写进 src/data/repos.json。
+// 数据在构建时被内联进 bundle：运行时零请求，也就不吃匿名 API 60 次/小时的限流，
+// 也不会有「先空着再跳出文案」的抖动。文件是提交进仓库的，CI 每次构建前刷新它。
 import { execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 
 const OWNER = process.env.REPO_OWNER ?? 'asinkLuno';
 const REPOS = (process.env.REPO_LIST ?? 'MusicDan,base6-techo,biocn-reader,img2pixelart')
@@ -50,6 +51,8 @@ for (const repo of REPOS) {
   }
 
   out[repo] = {
+    description: info?.description?.trim() || null,
+    homepage: info?.homepage?.trim() || null,
     pushedAt: info?.pushed_at ?? null,
     language: info?.language ?? null,
     version: version ?? null,
@@ -57,5 +60,6 @@ for (const repo of REPOS) {
   console.log(`${repo.padEnd(16)} ${out[repo].version ?? '—'}  ${out[repo].pushedAt ?? '—'}`);
 }
 
-writeFileSync('public/repo-meta.json', `${JSON.stringify(out, null, 2)}\n`);
-console.log('→ public/repo-meta.json');
+mkdirSync('src/data', { recursive: true });
+writeFileSync('src/data/repos.json', `${JSON.stringify(out, null, 2)}\n`);
+console.log('→ src/data/repos.json');

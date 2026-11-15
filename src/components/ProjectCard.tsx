@@ -1,48 +1,61 @@
 import type { Project } from '../content';
-import type { RepoMeta } from '../lib/github';
+import { repoUrl } from '../content';
+import { repoMeta } from '../lib/meta';
 import { relativeDate } from '../lib/format';
 
-type Props = { project: Project; meta?: RepoMeta };
+type Props = { project: Project };
 
-export function ProjectCard({ project, meta }: Props) {
+const chip =
+  'inline-flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-gray-400 hover:text-gray-950 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-white';
+
+export function ProjectCard({ project }: Props) {
+  const meta = repoMeta[project.id];
+  const description = meta?.description?.trim();
+  const homepage = meta?.homepage?.trim();
   const version = meta?.version ?? project.version;
   const updated = meta?.pushedAt ?? project.updated;
-  // 自己写的语言标签比 GitHub 的主语言判断更准，优先用它
-  const language = project.lang || meta?.language;
 
   return (
-    <article className="rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700">
-      <div className="flex flex-wrap items-center gap-2">
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noreferrer"
-          className="font-semibold text-gray-900 hover:underline dark:text-gray-100"
-        >
+    <article className="flex flex-col rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="leading-snug font-semibold text-gray-900 dark:text-gray-100">
           {project.name}
-        </a>
+        </h3>
         {version && (
-          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+          <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 font-mono text-[11px] text-gray-600 dark:bg-gray-800 dark:text-gray-300">
             {version}
           </span>
         )}
       </div>
 
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{project.desc}</p>
+      {description && (
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          {description}
+        </p>
+      )}
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400">
-        <span>{language}</span>
-        <span>·</span>
-        <span>更新于 {relativeDate(updated)}</span>
-        {project.demo && (
-          <>
-            <span>·</span>
-            <a href={project.demo} target="_blank" rel="noreferrer" className="hover:underline">
-              打开
-            </a>
-          </>
+      <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
+        <a className={chip} href={repoUrl(project.id)} target="_blank" rel="noreferrer">
+          GitHub
+          <span aria-hidden="true" className="text-[10px] opacity-60">
+            ↗
+          </span>
+        </a>
+        {homepage && (
+          <a className={chip} href={homepage} target="_blank" rel="noreferrer">
+            网站
+            <span aria-hidden="true" className="text-[10px] opacity-60">
+              ↗
+            </span>
+          </a>
         )}
       </div>
+
+      <p className="mt-3 flex flex-wrap items-center gap-x-1.5 border-t border-gray-100 pt-2.5 text-xs text-gray-500 dark:border-gray-800 dark:text-gray-500">
+        <span>{project.lang}</span>
+        <span aria-hidden="true">·</span>
+        <span>更新于 {relativeDate(updated)}</span>
+      </p>
     </article>
   );
 }

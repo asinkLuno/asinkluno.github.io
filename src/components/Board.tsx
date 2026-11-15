@@ -1,10 +1,7 @@
 import { columns, projects } from '../content';
-import type { RepoMeta } from '../lib/github';
 import { ProjectCard } from './ProjectCard';
 
-type Props = { meta: Record<string, RepoMeta> };
-
-export function Board({ meta }: Props) {
+export function Board() {
   return (
     <div className="grid gap-6 md:grid-cols-3">
       {columns.map((col) => {
@@ -24,7 +21,7 @@ export function Board({ meta }: Props) {
               </p>
             ) : (
               items.map((project) => (
-                <ProjectCard key={project.id} project={project} meta={meta[project.id]} />
+                <ProjectCard key={project.id} project={project} />
               ))
             )}
           </section>

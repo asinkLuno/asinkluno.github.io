@@ -1,6 +1,8 @@
 # asinkLuno · 看板
 
-一个纯文字的个人看板，用来展示在做的项目。React + Vite，构建成静态页面，发布在 GitHub Pages。
+一个个人看板，用来展示在做的项目。React + Vite + Tailwind，构建成静态页面，发布在 GitHub Pages。
+
+线上：https://asinkluno.github.io/
 
 ## 本地开发
 
@@ -11,15 +13,32 @@ npm run build    # 产物在 dist/
 npm run preview  # 预览构建结果
 ```
 
-## 改内容
+## 内容从哪来
 
-所有内容都在 `src/content.ts`：
+`src/content.ts` 只手写三件 GitHub 不知道的事：
 
-- `projects`：每个项目的名称、状态（`released` / `building` / `planned`）、一句话说明、任务清单、链接。
-- `columns`：三列看板的标题和副标题。
-- `tasks`：卡片里的清单，勾上 `done: true` 就是完成。**进度条和 `done/total` 由这份清单算出来**，不用手填百分比。
+- `projects`：仓库名（`id`，同时用来拼仓库地址）、显示名、状态（`released` / `building` / `planned`）、语言标签、兜底用的 `updated` 与 `version`。
+- `columns`：三列的标题与顺序（计划中 / 进行中 / 已发布）。
+- `site`：站名、博客地址、GitHub 地址。
 
-「更新于」优先显示 GitHub API 返回的真实提交时间（`pushed_at`），拉不到或限流时退回到 `content.ts` 里手写的 `updated`。
+卡片上的**简介、网站链接、版本号、更新时间**都来自 GitHub 仓库本身：
+
+- 简介 = 仓库的 `description`
+- 网站 = 仓库的 `homepage`（没填就不显示）
+- 版本号 = 最新 release 的 tag，没有 release 就退到最新 tag
+- 更新时间 = `pushed_at`
+
+想改卡片上的一句话，去改那个仓库的 About，不用动代码。
+
+## 版本号是构建时抓的
+
+`scripts/fetch-meta.mjs` 在构建前把上面这些数据抓下来，写进 `src/data/repos.json`，构建时内联进 bundle。所以页面运行时**不发任何请求**，也不会被匿名 API 的 60 次/小时限流卡住。
+
+```bash
+node scripts/fetch-meta.mjs   # 需要 GITHUB_TOKEN，或本机 gh auth login
+```
+
+CI 里这个脚本用 `secrets.GITHUB_TOKEN`，每天 03:00 还有一次定时构建，顺手刷新版本号。`src/data/repos.json` 提交在仓库里，只为让本地不配 token 也能跑；CI 每次都会覆盖它。
 
 ## 发布
 
@@ -31,5 +50,4 @@ npm run preview  # 预览构建结果
 VITE_BASE_PATH=/repo/ npm run build
 ```
 
-在 Actions 里则是给 build 步骤加 `env: VITE_BASE_PATH: /repo/`。
-用户站点（`username.github.io`）保持默认 `/` 即可。
+在 Actions 里则是给 build 步骤加 `env: VITE_BASE_PATH: /repo/`。用户站点（`username.github.io`）保持默认 `/` 即可。
