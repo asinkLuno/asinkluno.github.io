@@ -28,11 +28,6 @@ export default function App() {
       </header>
 
       <main>
-        <p className="lede">
-          这里不写简历。板子上是 {projects.length} 件我自己要用的小东西——进度条不是 KPI，
-          只是“这件事走到哪一步了”。
-        </p>
-
         <p className="stats">
           <span>
             <b>{count('building')}</b> 在写

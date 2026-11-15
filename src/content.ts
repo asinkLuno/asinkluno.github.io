@@ -28,7 +28,7 @@ export type Project = {
 
 export const site = {
   name: 'asinkLuno',
-  tagline: '一个写字的地方，也是一张没画完的板子。',
+  tagline: '几个还在做的项目。',
   blog: 'https://asinkluno.github.io/asinkLuno/',
   github: 'https://github.com/asinkLuno',
 };
