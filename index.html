@@ -18,13 +18,14 @@
     />
     <meta property="og:type" content="website" />
     <script>
-      // 在首屏渲染前决定主题，避免闪白/闪黑
+      // 在首屏渲染前定好主题，避免闪白/闪黑；auto 直接解析成 light/dark
       (function () {
         try {
           var saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') {
-            document.documentElement.setAttribute('data-theme', saved);
-          }
+          var dark =
+            saved === 'dark' ||
+            (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
         } catch (e) {}
       })();
     </script>
