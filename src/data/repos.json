@@ -22,13 +22,5 @@
     "version": null,
     "releasedAt": null,
     "pushedAt": "2026-11-13T10:23:54Z"
-  },
-  "img2pixelart": {
-    "description": null,
-    "homepage": null,
-    "language": "Python",
-    "version": "v0.2.0",
-    "releasedAt": null,
-    "pushedAt": "2026-08-18T13:10:46Z"
   }
 }

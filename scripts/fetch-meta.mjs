@@ -2,13 +2,18 @@
 // 数据在构建时被内联进 bundle：运行时零请求，也就不吃匿名 API 60 次/小时的限流，
 // 也不会有「先空着再跳出文案」的抖动。文件是提交进仓库的，CI 每次构建前刷新它。
 import { execSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const OWNER = process.env.REPO_OWNER ?? 'asinkLuno';
-const REPOS = (process.env.REPO_LIST ?? 'MusicDan,base6-techo,biocn-reader,img2pixelart')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean);
+// 仓库清单只认 content.ts 这一处，避免两边不同步
+const REPOS =
+  process.env.REPO_LIST?.split(',').map((s) => s.trim()).filter(Boolean) ??
+  [...readFileSync('src/content.ts', 'utf8').matchAll(/id:\s*'([^']+)'/g)].map((m) => m[1]);
+
+if (REPOS.length === 0) {
+  console.error('没从 src/content.ts 里读到仓库名');
+  process.exit(1);
+}
 
 function token() {
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;

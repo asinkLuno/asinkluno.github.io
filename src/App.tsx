@@ -8,6 +8,12 @@ const NOW = Date.now();
 const count = (status: Status) =>
   projects.filter((p) => statusOf(repoMeta[p.id], NOW) === status).length;
 
+const STATS: { status: Status; label: string }[] = [
+  { status: 'building', label: '进行中' },
+  { status: 'released', label: '已发布' },
+  { status: 'planned', label: '计划中' },
+];
+
 export default function App() {
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
@@ -26,9 +32,14 @@ export default function App() {
 
         <main className="py-8">
           <p className="mb-6 flex flex-wrap gap-x-4 text-sm text-gray-500 dark:text-gray-400">
-            <span>{count('building')} 个进行中</span>
-            <span>{count('released')} 个已发布</span>
-            <span>{count('planned')} 个计划中</span>
+            {STATS.map(({ status, label }) => {
+              const n = count(status);
+              return n > 0 ? (
+                <span key={status}>
+                  {n} 个{label}
+                </span>
+              ) : null;
+            })}
           </p>
 
           <Board />

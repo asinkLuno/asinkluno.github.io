@@ -38,7 +38,7 @@ npm run preview  # 预览构建结果
 - 没发过 release，但最近 30 天有提交 → **进行中**
 - 都没满足 → **计划中**
 
-阈值在 `src/lib/meta.ts` 的 `STALE_DAYS`。列内按最近活动时间倒序。
+阈值在 `src/lib/meta.ts` 的 `STALE_DAYS`。列内按最近活动时间倒序，空列不显示。
 
 ## 版本号是构建时抓的
 

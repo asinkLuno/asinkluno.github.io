@@ -15,7 +15,6 @@ export const projects: Project[] = [
   { id: 'MusicDan', name: 'MusicDan' },
   { id: 'base6-techo', name: 'base6-techo' },
   { id: 'biocn-reader', name: 'biocn-reader' },
-  { id: 'img2pixelart', name: 'img2pixelart' },
 ];
 
 export const repoUrl = (id: string) => `${site.github}/${id}`;
