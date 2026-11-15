@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>asinkLuno</title>
+    <meta
+      name="description"
+      content="asinkLuno 的个人页面：一个纯文字的地方，收录写作、专栏与一些在做的项目。"
+    />
+    <meta name="theme-color" content="#fdfcf8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171613" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content="asinkLuno" />
+    <meta
+      property="og:description"
+      content="一个纯文字的地方：写作、专栏与一些在做的项目。"
+    />
+    <meta property="og:type" content="website" />
+    <script>
+      // 在首屏渲染前决定主题，避免闪白/闪黑
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
