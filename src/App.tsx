@@ -19,7 +19,7 @@ export default function App() {
         <Board />
       </main>
 
-      <footer className="mt-16 border-t border-gray-200 pt-4 text-sm text-gray-500">
+      <footer className="mt-16 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
         © {YEAR} {site.name}
       </footer>
     </div>
