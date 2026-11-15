@@ -8,10 +8,7 @@ export default function App() {
     <div className="mx-auto max-w-3xl px-4 py-12">
       <header className="flex items-baseline justify-between gap-4">
         <h1 className="text-2xl font-bold">{site.name}</h1>
-        <nav className="flex gap-4 text-sm">
-          <a className="text-blue-600 hover:underline" href={site.blog}>
-            博客
-          </a>
+        <nav className="text-sm">
           <a className="text-blue-600 hover:underline" href={site.github}>
             GitHub
           </a>

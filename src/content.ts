@@ -6,7 +6,6 @@ export type Project = {
 
 export const site = {
   name: 'asinkLuno',
-  blog: 'https://asinkluno.github.io/asinkLuno/',
   github: 'https://github.com/asinkLuno',
 };
 
